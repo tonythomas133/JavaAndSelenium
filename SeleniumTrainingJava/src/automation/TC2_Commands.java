@@ -92,6 +92,13 @@ public class TC2_Commands {
 		act.keyUp(Keys.ENTER).build().perform();
 		act.sendKeys(Keys.TAB).build().perform();
 		
+		
+		//handling iframe
+		driver.switchTo().frame(0); //indexing method : check ho many iframes are there and check which iframe you require , indexing starts from 0
+		driver.switchTo().frame("launcher-frame"); //id
+		WebElement frame_contactUs = driver.findElement(By.xpath(dropDownText)); //prefered
+		//do whatever action you have to do
+		driver.switchTo().defaultContent(); //this has to be used to exit the iframe
 		}
 		
 		
