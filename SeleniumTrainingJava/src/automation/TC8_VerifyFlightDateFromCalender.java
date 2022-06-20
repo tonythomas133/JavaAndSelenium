@@ -61,7 +61,7 @@ public class TC8_VerifyFlightDateFromCalender {
 		else
 			System.out.println("ERROR: Flights are not listing");
 		
-		//driver.quit();
+		driver.quit();
 
 	}
 
