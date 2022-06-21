@@ -2,14 +2,18 @@ package automation;
 
 import java.awt.Desktop.Action;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class TC2_Commands {
 
@@ -99,6 +103,95 @@ public class TC2_Commands {
 		WebElement frame_contactUs = driver.findElement(By.xpath(dropDownText)); //prefered
 		//do whatever action you have to do
 		driver.switchTo().defaultContent(); //this has to be used to exit the iframe
+		
+		//wait methods
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //only handles no such element exception   this only has to be declared once. whenever a wait is required it will call it  
+		
+		WebDriverWait wait = new WebDriverWait(driver, 60);
+		wait.until(ExpectedConditions.visibilityOf(numberOfAdults));
+		 //INTERVIEW QUESTION: implicit and explicit wait
+		driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+		
+
+		//multiple window handling
+		//when new window is opened , from selenium perspective the control is still held by old window we have to switch control using logic and use switchback to go back control to old browser window
+		//INTERVIEW QUESTION: difference between getWindowHandles() and getWindowHandle()
+		
+		Set<String> windowIDs=driver.getWindowHandles();
+		String currentWindowID = driver.getWindowHandle();
+		driver.switchTo().window(currentWindowID);
+		
+		
+//		Get the current window ID
+		String parentWin =  driver.getWindowHandle();
+		System.out.println(">>>>>"+parentWin);
+		Thread.sleep(3000);
+		WebElement dubaiAirLnk = driver.findElement(By.xpath("//a[text()='Dubai visa']"));
+		dubaiAirLnk.click();
+		Thread.sleep(3000);
+		
+//		Switch to new window
+		for(String win : driver.getWindowHandles()) {
+			driver.switchTo().window(win);
+		}
+		
+		System.out.println("New page title>>>"+driver.getTitle());
+		//Actions to be done
+		driver.close();
+//		Switch to old window using window ID
+		driver.switchTo().window(parentWin);
+		
+		System.out.println("Old page title>>>"+driver.getTitle());
+		
+		driver.quit();
+		
+		
+		Alert simpleAlert = driver.switchTo().alert();
+		simpleAlert.accept();
+		simpleAlert.dismiss();
+		
+		//eg
+		WebElement simpleAlertBtn = driver.findElement(By.id("alertButton"));
+		simpleAlertBtn.click();
+		Alert simpleAlert = driver.switchTo().alert();
+		simpleAlert.accept();
+//		-----------For checking Implicit Wait---------
+//		WebElement oneWayTrvlType_Lnk = driver.findElement(By.xpath("//input[@id='trip_one']/following-sibling::label"));
+//		oneWayTrvlType_Lnk.click();
+		
+		WebElement simpleTimerAlertBtn = driver.findElement(By.id("timerAlertButton"));
+		simpleTimerAlertBtn.click();
+//		Thread.sleep(10000);
+		WebDriverWait wait = new WebDriverWait(driver,60);
+        wait.until(ExpectedConditions.alertIsPresent());
+        
+        
+		Alert simpleTimerAlert = driver.switchTo().alert();
+		simpleTimerAlert.accept();
+		
+		
+		WebElement confirmAlertBtn = driver.findElement(By.id("confirmButton"));
+		confirmAlertBtn.click();
+		Alert confirmAlertAccept = driver.switchTo().alert();
+		String alertText = confirmAlertAccept.getText();
+		System.out.println("Confirmation alert text is>>>> " + alertText);
+		confirmAlertAccept.accept();
+//		confirmAlertBtn.click();
+//		Alert confirmAlertDismiss = driver.switchTo().alert();
+//		confirmAlertDismiss.dismiss();
+		
+		WebElement promptAlertBtn = driver.findElement(By.id("promtButton"));
+		promptAlertBtn.click();
+		Alert promptAlert = driver.switchTo().alert();
+		String alertText1 = promptAlert.getText();
+		System.out.println("Prompt alert text is>>>> " + alertText1);
+		promptAlert.sendKeys("Test User");
+		promptAlert.accept();
+
+		driver.quit();
+		
+		
+		
 		}
 		
 		
